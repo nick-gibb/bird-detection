@@ -4,8 +4,8 @@ from pathlib import Path
 
 import pandas as pd
 
-from .constants import DF_CLASSES_PATH, OUTPUT_FOLDER, FRAME_INTERVAL
-from .data_visualization import fetch_bird_data
+from .constants import DF_CLASSES_PATH, FRAME_INTERVAL, OUTPUT_FOLDER
+from .data_visualization import visualize_bird_detections
 from .database_operations import initialize_db, populate_database_tables
 from .file_operations import clean_output_folder
 from .video_processing import extract_and_detect_frames
@@ -26,8 +26,7 @@ def execute_program(video_file_path):
     initialize_db()
     class_data_df = pd.read_csv(DF_CLASSES_PATH)
     populate_database_tables(detected_objects_df, class_data_df)
-    fetch_bird_data()
-
+    visualize_bird_detections()
 
 if __name__ == "__main__":
     arg_parser = argparse.ArgumentParser(

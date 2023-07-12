@@ -45,18 +45,20 @@ def visualize_bird_detections() -> None:
     create_and_save_plot(bird_counts_per_second)
 
 
-def create_and_save_plot(bird_counts: pd.Series) -> None:
+def create_and_save_plot(bird_counts: pd.Series, annotation_interval: int = 10) -> None:
     """
     Generate and save a line plot for the given bird counts data.
 
     Args:
         bird_counts (Series): Bird counts per second.
+        annotation_interval (int): The interval at which to add annotations to the plot.
     """
     plt.figure(figsize=(12, 8))
     sns.lineplot(x=bird_counts.index, y=bird_counts.values, color="blue", linewidth=2.5)
 
-    for x, y in bird_counts.items():
-        plt.text(x, y, str(y), color="black", fontsize=12, ha="center", va="bottom")
+    for i, (x, y) in enumerate(bird_counts.items()):
+        if i % annotation_interval == 0:  # Only annotate every `annotation_interval`th point
+            plt.text(x, y, str(y), color="black", fontsize=12, ha="center", va="bottom")
 
     plt.title("Number of Birds Detected Over Video Duration", fontsize=20)
     plt.xlabel("Video Duration (seconds)", fontsize=16)
