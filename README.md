@@ -1,6 +1,5 @@
 # Bird Detection from Video Files
 
-
 ![Bird Detection from Video Files](data/output/num_birds_detected_vs_video_duration.png)
 
 This repository contains a Python application that performs bird detection from video files using the YOLOv5s model.
@@ -25,11 +24,12 @@ The application can be run in a Docker container.
 
 To build the Docker image:
 
-    ```bash
-    docker build -t birds .
-    ```
+```bash
+docker build -t birds .
+```
+
 To run the Docker container:
 
-    ```bash
-    docker run birds
-    ```
+```bash
+docker run birds
+```
