@@ -1,16 +1,27 @@
+import logging
 from pathlib import Path
 
 import cv2
 import pandas as pd
 import torch
 
+# Set up logging
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+
+handler = logging.StreamHandler()
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+handler.setFormatter(formatter)
+logger.addHandler(handler)
+
 
 def load_model():
     """Load the YOLOv5s model"""
+    logger.info("Loading YOLOv5s model...")
     return torch.hub.load("ultralytics/yolov5", "yolov5s")
 
 
-def detect_birds(model, frame, bird_class_index):
+def detect_birds(model, frame):
     """Perform object detection on a given frame using YOLOv5."""
     results = model(frame)
 
@@ -24,7 +35,6 @@ def detect_birds(model, frame, bird_class_index):
             "frame_bounding_box_coordinate_3": y2.item(),
         }
         for x1, y1, x2, y2, conf, class_idx in results.xyxy[0]
-        if int(class_idx) == bird_class_index
     ]
     return detections
 
@@ -57,13 +67,13 @@ def annotate_and_save_frame(frame, output_file_path, bird_count):
 
 def extract_and_detect_frames(video_path, output_folder, frame_interval):
     """Extract frames from a video file, perform object detection using YOLOv5, and save the annotated frames."""
+    logger.info("Extracting and detecting frames...")
     video = cv2.VideoCapture(str(video_path))
 
     total_frames = int(video.get(cv2.CAP_PROP_FRAME_COUNT))
-    print(f"Total frames: {total_frames}")
+    logger.info(f"Total frames: {total_frames}")
 
     model = load_model()
-    bird_class_index = next(i for i, v in model.names.items() if v == "bird")
 
     detections = []  # Initialize list to hold all detections
     for frame_index, frame in enumerate(get_frames(video, frame_interval)):
@@ -73,7 +83,7 @@ def extract_and_detect_frames(video_path, output_folder, frame_interval):
             Path(output_folder) / f"frame_{frame_index}_at_{timestamp_msec}.jpg"
         )
 
-        object_detections = detect_birds(model, frame, bird_class_index)
+        object_detections = detect_birds(model, frame)
         bird_count = len(object_detections)
 
         frame = draw_bounding_boxes(frame, object_detections)

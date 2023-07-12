@@ -1,6 +1,16 @@
+import logging
 import sqlite3
 
 from .constants import DB_PATH
+
+# Set up logging
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+
+handler = logging.StreamHandler()
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+handler.setFormatter(formatter)
+logger.addHandler(handler)
 
 
 def initialize_db():
@@ -10,11 +20,14 @@ def initialize_db():
     Deletes and creates 'Classes', 'Frames' and 'Objects' tables.
     """
     # If the database already exists, delete it
+    logger.info("Initializing database...")
     if DB_PATH.exists():
+        logger.info("Database exists. Deleting...")
         DB_PATH.unlink()
 
     # Establish a connection to the SQLite database
     with sqlite3.connect(str(DB_PATH)) as conn:
+        logger.info("Established connection to database.")
         cursor = conn.cursor()
 
         # SQL command to create the Classes table
@@ -25,6 +38,7 @@ def initialize_db():
             )
         """
         cursor.execute(create_classes_table_command)
+        logger.info("Created Classes table.")
 
         # SQL command to create the Frames table
         create_frames_table_command = """
@@ -35,6 +49,7 @@ def initialize_db():
             )
         """
         cursor.execute(create_frames_table_command)
+        logger.info("Created Frames table.")
 
         # SQL command to create the Objects table
         create_objects_table_command = """
@@ -52,6 +67,7 @@ def initialize_db():
             )
         """
         cursor.execute(create_objects_table_command)
+        logger.info("Created Objects table.")
 
         # Commit changes
         conn.commit()
@@ -68,6 +84,8 @@ def populate_database_tables(detections_df, classes_df):
     Inserts class data into 'Classes' table and detection data into 'Objects' table,
     linked to frame and class.
     """
+    logger.info("Populating database tables...")
+
     class_to_id_dict = classes_df.set_index("class_name")["class_id"].to_dict()
     grouped_detections = detections_df.groupby(["timestamp", "frame_number"])
 
@@ -75,6 +93,7 @@ def populate_database_tables(detections_df, classes_df):
     with sqlite3.connect(str(DB_PATH)) as conn:
         # Insert the classes into the Classes table
         classes_df.to_sql("Classes", conn, if_exists="append", index=False)
+        logger.info("Inserted classes into Classes table.")
 
         cursor = conn.cursor()
         total_inserted_rows = 0
@@ -124,8 +143,9 @@ def populate_database_tables(detections_df, classes_df):
                 )
 
                 total_inserted_rows += 1
-                if total_inserted_rows % 50 == 0:
-                    print(f"Inserted {total_inserted_rows} rows so far")
+                if total_inserted_rows % 1000 == 0:
+                    logger.info(f"Inserted {total_inserted_rows} rows so far.")
 
         # Commit changes
         conn.commit()
+    logger.info("Finished populating database tables.")
