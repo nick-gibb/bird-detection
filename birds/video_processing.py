@@ -29,6 +29,18 @@ def detect_birds(model, frame, bird_class_index):
     return detections
 
 
+def draw_bounding_boxes(frame, detections):
+    """Draw bounding boxes on the frame for each detection."""
+    for detection in detections:
+        x1 = int(detection["frame_bounding_box_coordinate_0"])
+        y1 = int(detection["frame_bounding_box_coordinate_1"])
+        x2 = int(detection["frame_bounding_box_coordinate_2"])
+        y2 = int(detection["frame_bounding_box_coordinate_3"])
+        cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
+    return frame
+
+
+
 def annotate_and_save_frame(frame, output_file_path, bird_count):
     """Save the frame as a JPEG file with bounding box annotations and bird count."""
     cv2.putText(
@@ -63,6 +75,8 @@ def extract_and_detect_frames(video_path, output_folder, frame_interval):
 
         object_detections = detect_birds(model, frame, bird_class_index)
         bird_count = len(object_detections)
+
+        frame = draw_bounding_boxes(frame, object_detections)
         annotate_and_save_frame(frame, output_path, bird_count)
         for detection in object_detections:
             detection["timestamp"] = timestamp_msec

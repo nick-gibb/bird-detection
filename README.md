@@ -1,6 +1,7 @@
 # Bird Detection from Video Files
 
 ![Bird Detection from Video Files](data/output/num_birds_detected_vs_video_duration.png)
+![Example Bird Detection](data/output/frames/frame_19_at_11887.jpg)
 
 This repository contains a Python application that performs bird detection from video files using the YOLOv5s model.
 
