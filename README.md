@@ -57,13 +57,13 @@ Used Python libraries include:
 
 ### Design Decisions
 
-Different Python modules are used for specific functionalities like file operations, database operations, video processing, and data visualization. Constants are used for file paths and frame intervals. SQLite enables lightweight, serverless data storage.
+Multiple Python modules are used for the different functionalities, including file operations, database operations, video processing, and data visualization. Constants are used for file paths and frame intervals. SQLite is used for lightweight, serverless data storage. The entire application, including data processing and visualization, is run from a single main script.
 
 ### Improvement Suggestions
 
 - Enhance error handling.
 - Implement a CI/CD pipeline for automated testing, linting, formatting, and dev/prod deployment.
-- Improved integration for real-time or recorded video input streams.
+- Integrate with an upstream system that provides real-time or recorded video input streams.
 - Evaluate the performance of different object detection models and fine-tune them for bird detection.
 - Monitoring and alerting for uptime, performance, and business-relevant metrics (e.g. number of birds detected).
 - Include unit tests for code reliability and maintainability.
