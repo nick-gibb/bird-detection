@@ -3,7 +3,7 @@
 ![Bird Detection from Video Files](data/output/num_birds_detected_vs_video_duration.png)
 ![Example Bird Detection](data/output/frames/frame_19_at_11887.jpg)
 
-This repository hosts a Python app for bird detection in video files using YOLOv5s model.
+This repository contains a Python app for bird detection in video files using the YOLOv5s model. It processes videos to detect birds and stores the extracted data in an SQLite database (output/birds.db).
 
 ## How to Run
 
