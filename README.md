@@ -62,6 +62,10 @@ Different Python modules are used for specific functionalities like file operati
 ### Improvement Suggestions
 
 - Enhance error handling.
+- Implement a CI/CD pipeline for automated testing, linting, formatting, and dev/prod deployment.
+- Improved integration for real-time or recorded video input streams.
+- Evaluate the performance of different object detection models and fine-tune them for bird detection.
+- Monitoring and alerting for uptime, performance, and business-relevant metrics (e.g. number of birds detected).
 - Include unit tests for code reliability and maintainability.
 - Optimize performance via parallel processing of video frames.
 - Preserve existing data and append new ones instead of deleting the entire database each run.
